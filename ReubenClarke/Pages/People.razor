@@ -1,0 +1,69 @@
+﻿@page "/People"
+@using ReubenClarke.Models
+@using DataAccessLibrary
+@using DataAccessLibrary.Models
+
+@inject IPeopleData _db
+<h1>People Page</h1>
+
+<h4>Insert New Person</h4>
+<EditForm Model="@newPerson" OnValidSubmit="@InsertPerson">
+	<DataAnnotationsValidator />
+	<ValidationSummary />
+
+	<InputText id="FirstName" @bind-Value="newPerson.Firstname" />
+	<InputText id="LastName" @bind-Value="newPerson.LastName" />
+
+	<button type="submit" class="btn btn-primary">Submit</button>
+</EditForm>
+
+<h4>Current People</h4>
+@if (people is null)
+{
+	<p><em>Loading...</em></p>
+}
+else
+{
+	<table class="table table-striped">
+		<thead>
+			<tr>
+				<th>First Name</th>>
+				<th>Last Name</th>>
+			</tr>
+        </thead>
+		<tbody>
+			@foreach (var person in people)
+			{
+				<tr>
+					<td>@person.Firstname</td>
+					<td>@person.LastName</td>
+		
+				</tr>
+			}
+	
+		</tbody>
+    </table> 
+}
+@code {
+	private List<PersonModel> people;
+	private DisplayPersonModel newPerson = new DisplayPersonModel();
+
+	protected override async Task OnInitializedAsync()
+	{
+		people = await _db.GetPeople();
+	}
+	private async Task InsertPerson()
+		{
+			PersonModel p = new PersonModel
+			{
+			Firstname = newPerson.Firstname,
+			LastName = newPerson.LastName,
+			};
+
+			await _db.InsertPerson(p);
+
+			people.Add(p);
+
+			newPerson = new DisplayPersonModel();
+		}
+}

@@ -1,0 +1,80 @@
+﻿@page "/math"
+<h1>3x+1</h1>
+<h4>Input Number</h4>
+
+<EditForm Model="modelmodel" OnInvalidSubmit="@domath">
+
+    <InputNumber @bind-Value="modelmodel.number" />
+
+</EditForm>
+
+
+@if (listofturn == null)
+{
+    <p><em>Loading...</em></p>
+}
+else
+{
+    <table class='table'>
+        <thead>
+            <tr>
+                <th>Number Output</th>
+
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var num in listofturn)
+            {
+                <tr>
+                    <td>@num.numoutput</td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}
+
+
+@code
+{
+
+    public class listnum
+    {
+        public int numoutput { get; set; }
+
+    }
+
+    mathmodel modelmodel = new mathmodel();
+    public class mathmodel
+    {
+        public int number = 0;
+        public int biggest_number = 0;
+        public int turns = 0;
+
+    }
+    private void domath()
+    {
+
+            if (modelmodel.number > modelmodel.biggest_number)
+                modelmodel.biggest_number = modelmodel.number;
+
+            if (modelmodel.number % 2 == 0)
+                modelmodel.number = modelmodel.number / 2;
+
+
+            else
+                modelmodel.number = (modelmodel.number * 3) + 1;
+            listofturn.Add(new listnum() { numoutput = modelmodel.number });
+
+
+            modelmodel.turns++;
+
+        }
+
+
+
+    }
+}
+@code {
+    public List<listnum> listofturn;
+
+    }

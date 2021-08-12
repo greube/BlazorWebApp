@@ -1,0 +1,8 @@
+version: '3.4'
+
+services:
+  reubenclarke:
+    image: ${DOCKER_REGISTRY-}reubenclarke
+    build:
+      context: .
+      dockerfile: ReubenClarke/Dockerfile
